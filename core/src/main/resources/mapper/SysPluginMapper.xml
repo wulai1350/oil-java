@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysPluginMapper">
+<resultMap id="SysPluginMap" type="com.rzico.core.entity.SysPlugin">
+    <!--编号-->
+    <result column="id" property="id"/>
+    <!--插件名称-->
+    <result column="name" property="name"/>
+    <!--插件版本-->
+    <result column="version" property="version"/>
+    <!--插件编号-->
+    <result column="plugin_id" property="pluginId"/>
+    <!--插件类型（1存储插件 2支付插件 3手机短信 4分账插件）-->
+    <result column="plugin_type" property="pluginType"/>
+    <!--是否安装-->
+    <result column="is_installed" property="isInstalled"/>
+    <!--是否启用-->
+    <result column="is_enabled" property="isEnabled"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+    <collection property="sysPluginAttribute" column="id" select="com.rzico.core.mapper.SysPluginAttributeMapper.getSysPluginAttribute">
+
+    </collection>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,name,version,plugin_id,plugin_type,is_installed,is_enabled,mch_id,create_by,create_date,modify_by,modify_date
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="name !=null and name !=''">
+                AND name=#{name}
+            </if>
+            <if test="version !=null and version !=''">
+                AND version=#{version}
+            </if>
+            <if test="pluginId !=null and pluginId !=''">
+                AND plugin_id=#{pluginId}
+            </if>
+            <if test="pluginType !=null and pluginType !=''">
+                AND plugin_type=#{pluginType}
+            </if>
+            <if test="isInstalled !=null and isInstalled !=''">
+                AND is_installed=#{isInstalled}
+            </if>
+            <if test="isEnabled !=null and isEnabled !=''">
+                AND is_enabled=#{isEnabled}
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createDate !=null and endDate !=null">
+                AND (create_date >=#{createDate} and  create_date &lt;=#{endDate})
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" resultMap="SysPluginMap" parameterType="map">
+      select
+        <include refid="column_list"/>
+        from sys_plugin
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+
+    <select id="find" resultMap="SysPluginMap" parameterType="string">
+        select
+        <include refid="column_list"/>
+         from sys_plugin
+        where id=#{id}
+    </select>
+</mapper>

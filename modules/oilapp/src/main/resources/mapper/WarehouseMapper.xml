@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.oilapp.mapper.WarehouseMapper">
+<resultMap id="WarehouseMap" type="com.rzico.oilapp.entity.Warehouse">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--油库名称-->
+    <result column="name" property="name"/>
+    <!--油库编码-->
+    <result column="code" property="code"/>
+    <!--所属公司-->
+    <result column="company_id" property="companyId"/>
+    <!--供应商ID-->
+    <result column="customer_id" property="customerId"/>
+    <!--所属城市-->
+    <result column="area_id" property="areaId"/>
+    <!--详情地址-->
+    <result column="address" property="address"/>
+    <!--联系电话-->
+    <result column="phone" property="phone"/>
+    <!--联系人-->
+    <result column="linkman" property="linkman"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,name,code,company_id,customer_id,area_id,address,phone,linkman
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="name !=null">
+                AND name=#{name}
+            </if>
+            <if test="keyword !=null">
+                AND name like concat('%',#{keyword},'%')
+            </if>
+            <if test="code !=null">
+                AND code=#{code}
+            </if>
+            <if test="companyId !=null">
+                AND company_id=#{companyId}
+            </if>
+            <if test="customerId !=null">
+                AND customer_id=#{customerId}
+            </if>
+            <if test="areaId !=null">
+                AND area_id=#{areaId}
+            </if>
+            <if test="address !=null">
+                AND address=#{address}
+            </if>
+            <if test="phone !=null">
+                AND phone=#{phone}
+            </if>
+            <if test="linkman !=null">
+                AND linkman=#{linkman}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="WarehouseMap">
+        select
+        <include refid="column_list"/>
+        from wx_warehouse
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from wx_warehouse
+        <include refid="where_filters"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="WarehouseMap">
+        select
+        <include refid="column_list"/>
+        from wx_warehouse
+        where id =#{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

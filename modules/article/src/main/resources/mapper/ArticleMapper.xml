@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.article.mapper.ArticleMapper">
+<resultMap id="ArticleMap" type="com.rzico.article.entity.Article">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--谁可见{0:公开,1:不公开,2:加密,3:私秘}-->
+    <result column="authority" property="authority"/>
+    <!--文章内容-->
+    <result column="content" property="content"/>
+    <result column="orders" property="orders"/>
+    <!--阅读数-->
+    <result column="hits" property="hits"/>
+    <result column="read_time" property="readTime"/>
+    <!--类型 {0:图文,1:模板,2:商品库}-->
+    <result column="article_type" property="articleType"/>
+    <!--标题-->
+    <result column="title" property="title"/>
+    <!--分类-->
+    <result column="article_category_id" property="articleCategoryId"/>
+    <!--是否删除-->
+    <result column="deleted" property="deleted"/>
+    <!--缩略图-->
+    <result column="thumbnail" property="thumbnail"/>
+    <!--是否草稿-->
+    <result column="is_draft" property="isDraft"/>
+    <!--其他资源-->
+    <result column="meta" property="meta"/>
+
+    <association property="articleCategory" column="{parentId=article_category_id}" select="com.rzico.article.mapper.ArticleCategoryMapper.getParent">
+    </association >
+
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,authority,orders,content,hits,read_time,article_type,title,article_category_id,deleted,thumbnail,is_draft,meta
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="authority !=null">
+                AND authority=#{authority}
+            </if>
+            <if test="content !=null">
+                AND content=#{content}
+            </if>
+            <if test="hits !=null">
+                AND hits=#{hits}
+            </if>
+            <if test="articleType !=null">
+                AND article_type=#{articleType}
+            </if>
+            <if test="keyword !=null">
+                AND title like concat('%',#{keyword},'%')
+            </if>
+            <if test="articleCategoryId !=null and articleCategoryId==0">
+                AND article_category_id is null
+            </if>
+            <if test="treePath !=null and treePath !=''">
+                AND article_category_id in (select id from wx_article_category where tree_path like CONCAT('%,', #{treePath,jdbcType=VARCHAR},',%'))
+            </if>
+
+            <if test="deleted !=null">
+                AND deleted=#{deleted}
+            </if>
+
+            <if test="isDraft !=null">
+                AND is_draft=#{isDraft}
+            </if>
+            <if test="meta !=null">
+                AND meta=#{meta}
+            </if>
+
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="ArticleMap">
+        select
+        <include refid="column_list"/>
+        from wx_article
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+        count(*)
+        from wx_article
+        <include refid="where_filters"/>
+    </select>
+
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rzico.core.mapper.SysRoleUserMapper">
+  <resultMap id="SysRoleUserMap" type="com.rzico.core.entity.SysRoleUser">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <id column="role_id" jdbcType="VARCHAR" property="roleId" />
+  </resultMap>
+
+  <!--列信息-->
+  <sql id="column_list">
+    id,role_id,user_id
+  </sql>
+
+  <select id="selectListByCondition" parameterType="com.rzico.core.entity.SysRoleUser" resultMap="SysRoleUserMap">
+    select
+    *
+    from sys_role_user
+    <where>
+      <if test="userId!=null and userId!=''">
+        and user_id =#{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="roleId!=null and roleId!=''">
+        and role_id =#{roleId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="countByCondition" parameterType="com.rzico.core.entity.SysRoleUser" resultType="java.lang.Integer">
+    select
+    count(*)
+    from sys_role_user
+    <where>
+      <if test="userId!=null and userId!=''">and user_id =#{userId,jdbcType=VARCHAR}</if>
+      <if test="roleId!=null and roleId!=''">and role_id =#{roleId,jdbcType=VARCHAR}</if>
+    </where>
+  </select>
+
+  <!--动态条件-->
+  <sql id="where_filters">
+    <where>
+      <if test="userId !=null and userId !=''">
+        AND user_id=#{userId}
+      </if>
+      <if test="roleId !=null and roleId !=''">
+        AND role_id=#{roleId}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectList" parameterType="map" resultMap="SysRoleUserMap">
+    select
+    <include refid="column_list"/>
+    from sys_role_user
+    <include refid="where_filters"/>
+    <if test="sortField != null and sortField != ''">
+      ORDER BY
+      ${sortField}
+      <if test="sortType != null and sortType != ''">
+        ${sortType}
+      </if>
+    </if>
+  </select>
+
+</mapper>

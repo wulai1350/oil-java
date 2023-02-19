@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysPostMapper">
+<resultMap id="SysPostMap" type="com.rzico.core.entity.SysPost">
+    <!--岗位编码-->
+    <result column="id" property="id"/>
+    <!--岗位名称-->
+    <result column="name" property="name"/>
+    <!--父级编号-->
+    <result column="parent_id" property="parentId"/>
+    <!--关系树-->
+    <result column="tree_path" property="treePath"/>
+    <!--排序-->
+    <result column="data_sort" property="dataSort"/>
+    <!--状态（1启用 0停用）-->
+    <result column="status" property="status"/>
+    <!--备注信息-->
+    <result column="remark" property="remark"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--删除标志-->
+    <result column="del_flag" property="delFlag"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,name,parent_id,tree_path,data_sort,status,remark,mch_id,create_by,create_date,modify_by,modify_date,del_flag
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="name !=null and name !=''">
+                AND name like concat('%',#{name},'%')
+            </if>
+            <if test="parentId !=null and parentId !=''">
+                AND parent_id=#{parentId}
+            </if>
+            <if test="treePath !=null and treePath !=''">
+                AND tree_path=#{treePath}
+            </if>
+            <if test="dataSort !=null and dataSort !=''">
+                AND data_sort=#{dataSort}
+            </if>
+            <if test="status !=null">
+                AND status=#{status}
+            </if>
+            <if test="remark !=null and remark !=''">
+                AND remark=#{remark}
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createDate !=null and createDate !=''">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyBy !=null and modifyBy !=''">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null and modifyDate !=''">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="delFlag !=null">
+                AND del_flag=#{delFlag}
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="selectList" parameterType="map" resultMap="SysPostMap">
+        select
+        <include refid="column_list"/>
+        from sys_post
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+
+    <select id="selectPostByEmployee" parameterType="string" resultMap="SysPostMap">
+        select
+        <include refid="column_list"/>
+        from  sys_post
+        where id in (
+        select post_id from sys_employee_post where
+        employee_id =#{id,jdbcType=VARCHAR}
+        )
+    </select>
+
+</mapper>

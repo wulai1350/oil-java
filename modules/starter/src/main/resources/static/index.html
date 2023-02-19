@@ -1,0 +1,152 @@
+<html>
+<head>
+    <title>芸助手</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <style type="text/css">
+        html,body {
+            border:0px;
+            margin:0px;
+            padding:0px;
+        }
+        .img{
+            width: 100%;
+        }
+        .imgTwo{
+            width: 100%;
+            position: relative;
+        }
+        .buttonBox{
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+        }
+        .button {
+            width: 35%;
+            height:6%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            top: 33%;
+            left: 13%;
+            position: absolute;
+            border:0;
+            filter:alpha(opacity:30); opacity:0.3;  -moz-opacity:0.3;-khtml-opacity: 0.3
+        }
+        .mask{
+            position: fixed;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0,0,0,0.7);
+            /*z-index: 99999;*/
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .mask-sign-imgBox{
+            width:70px;
+            height:70px;
+        }
+        .mask-sign span{
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1;
+            margin-top: 20px;
+            display: inline-block;
+            letter-spacing: 1.25px;
+            text-align: right;
+            color: #ffffff;
+        }
+        .mask-sign{
+            position: absolute;
+            right: 0;
+            top:0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .maskBox{
+            display: none;
+        }
+        .displayBlock{
+            display: block;
+        }
+        .displayNone{
+            display: none;
+        }
+ </style>
+    <script>
+
+        //判断是否是微信浏览器的函数
+        function isWeiXin(){
+            //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
+            var ua = window.navigator.userAgent.toLowerCase();
+            //通过正则表达式匹配ua中是否含有MicroMessenger字符串
+            if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+
+        function download() {
+            if (isWeiXin()) {
+                //userAgent 属性是一个只读的字符串，声明了浏览器用于 HTTP 请求的用户代理头的值
+                var u = window.navigator.userAgent;
+                //Android终端
+                var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+                //iOS终端
+                var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+                if(isAndroid){
+                    var ele=  window.document .getElementById ("span");
+                    ele.innerHTML = "点击“…”在浏览器打开";
+                }
+                if(isiOS){
+                    var ele=  window.document .getElementById ("span");
+                    ele.innerHTML = "点击“…”在Safari浏览器打开";
+                }
+                disBlock()
+            }else {
+                window.location.href ="http://cdn.rzico.com/eeuiApp/release/rzico-boot-2.3.11.apk"
+            }
+        }
+
+        function disBlock() {
+            document.getElementById("mask").className = "displayBlock";
+        }
+
+        function downMask() {
+            document.getElementById("mask").className = "displayNone";
+        }
+
+    </script>
+</head>
+<body ontouchstart="">
+<div class="">
+    <div class="buttonBox" onclick="download()">
+        <image class="img" src="images/1.png"></image>
+        <button id="btn" class="button" ></button>
+    </div>
+    <image class="img" src="images/3.png"></image>
+    <image class="img" src="images/4.png"></image>
+    <image class="img" src="images/5.png"></image>
+    <div class="maskBox" id="mask"  onclick="downMask()">
+        <div class="mask">
+            <div class="mask-sign">
+                <span id="span"></span>
+                <image class="mask-sign-imgBox" src="images/toast.png"></image>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

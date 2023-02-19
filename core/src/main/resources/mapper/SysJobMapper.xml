@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysJobMapper">
+    <resultMap id="SysJobMap" type="com.rzico.core.entity.SysJob">
+        <!---->
+        <result column="id" property="id"/>
+        <!--描述任务-->
+        <result column="name" property="name"/>
+        <!--任务表达式-->
+        <result column="cron" property="cron"/>
+        <!--状态:0禁用false/1启用true-->
+        <result column="status" property="status"/>
+        <!--执行状态:0未启动/1运行中-->
+        <result column="exec_status" property="execStatus"/>
+        <!--状态:0未启动false/1启动true-->
+        <result column="exec_err_desc" property="execErrDesc"/>
+        <!--执行机IP地址-->
+        <result column="exec_addr" property="execAddr"/>
+        <!--任务执行方法-->
+        <result column="clazz_path" property="clazzPath"/>
+        <!--其他描述-->
+        <result column="job_desc" property="jobDesc"/>
+        <!---->
+        <result column="create_by" property="createBy"/>
+        <!---->
+        <result column="create_date" property="createDate"/>
+        <!---->
+        <result column="modify_by" property="modifyBy"/>
+        <!---->
+        <result column="modify_date" property="modifyDate"/>
+
+    </resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,name,cron,status,clazz_path,exec_err_desc,exec_status,exec_addr,job_desc,create_by,create_date,modify_by,modify_date
+    </sql>
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="name !=null and name !=''">
+                AND name=#{name}
+            </if>
+            <if test="cron !=null and cron !=''">
+                AND cron=#{cron}
+            </if>
+            <if test="status !=null and status !=''">
+                AND status=#{status}
+            </if>
+            <if test="clazzPath !=null and clazzPath !=''">
+                AND clazz_path=#{clazzPath}
+            </if>
+            <if test="execErrDesc !=null and execErrDesc !=''">
+                AND exec_err_desc=#{execErrDesc}
+            </if>
+            <if test="execStatus !=null and execStatus !=''">
+                AND exec_status=#{execStatus}
+            </if>
+            <if test="execAddr !=null and execAddr !=''">
+                AND exec_addr=#{execAddr}
+            </if>
+            <if test="jobDesc !=null and jobDesc !=''">
+                AND job_desc=#{jobDesc}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createDate !=null and createDate !=''">
+                AND create_date=#{createDate}
+            </if>
+            <if test="startDate !=null and startDate !='' and endDate != null and endDate !=''">
+                AND (create_date >= #{startDate} and create_date &lt;= #{endDate})
+            </if>
+            <if test="modifyBy !=null and modifyBy !=''">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null and modifyDate !=''">
+                AND modify_date=#{modifyDate}
+            </if>
+        </where>
+    </sql>
+    <select id="selectList" parameterType="map" resultMap="SysJobMap">
+        select
+        <include refid="column_list"/>
+        from sys_job
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+
+</mapper>

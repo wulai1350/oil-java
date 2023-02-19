@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.oilapp.mapper.OrderMapper">
+<resultMap id="OrderMap" type="com.rzico.oilapp.entity.Order">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--所属公司-->
+    <result column="company_id" property="companyId"/>
+    <!--供应商-->
+    <result column="supplier_id" property="supplierId"/>
+    <!--采购商-->
+    <result column="customer_id" property="customerId"/>
+    <!--产品-->
+    <result column="product_id" property="productId"/>
+    <!--油库-->
+    <result column="warehouse_id" property="warehouseId"/>
+    <!--状态(0.待接单,1.待付款,2.已付款,9.已完成)-->
+    <result column="status" property="status"/>
+    <!--油品单价-->
+    <result column="price" property="price"/>
+    <!--加价售销-->
+    <result column="add_price" property="addPrice"/>
+    <!--购买吨数-->
+    <result column="quantity" property="quantity"/>
+    <result column="add_price" property="addPrice"/>
+    <result column="amount_payable" property="amountPayable"/>
+    <result column="amount_paid" property="amountPaid"/>
+    <result column="sn" property="sn"/>
+    <!--提供方式(1.车提,2.船提,3.火车)-->
+    <result column="delivery" property="delivery"/>
+
+    <result column="order_method" property="orderMethod"/>
+    <!--锁油期限(天)-->
+    <result column="limit_day" property="limitDay"/>
+
+    <!--客户经理-->
+    <result column="linkman" property="linkman"/>
+    <!--联系电话-->
+    <result column="phone" property="phone"/>
+    <!--备注-->
+    <result column="memo" property="memo"/>
+
+    <association property="seller" column="{id=supplier_id}" select="com.rzico.oilapp.mapper.CustomerMapper.find"/>
+
+    <association property="buyyer" column="{id=customer_id}" select="com.rzico.oilapp.mapper.CustomerMapper.find"/>
+
+    <association property="product" column="{id=product_id}" select="com.rzico.oilapp.mapper.ProductMapper.find"/>
+
+    <association property="warehouse" column="{id=warehouse_id}" select="com.rzico.oilapp.mapper.WarehouseMapper.find"/>
+
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,company_id,sn,amount_payable,amount_paid,supplier_id,customer_id,product_id,warehouse_id,status,price,add_price,quantity,delivery,limit_day,order_method,linkman,phone,memo
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="startDate !=null and endDate != null">
+                AND (create_date >= #{startDate} and create_date &lt;= #{endDate})
+            </if>
+            <if test="startDate ==null and endDate != null">
+                AND create_date &lt;= #{endDate}
+            </if>
+            <if test="startDate !=null and endDate == null">
+                AND create_date >= #{startDate}
+            </if>
+
+            <if test="companyId !=null">
+                AND company_id=#{companyId}
+            </if>
+            <if test="supplierId !=null">
+                AND supplier_id=#{supplierId}
+            </if>
+            <if test="customerId !=null">
+                AND customer_id=#{customerId}
+            </if>
+            <if test="productId !=null">
+                AND product_id=#{productId}
+            </if>
+            <if test="warehouseId !=null">
+                AND warehouse_id=#{warehouseId}
+            </if>
+            <if test="status !=null">
+                AND status=#{status}
+            </if>
+            <if test="price !=null">
+                AND price=#{price}
+            </if>
+            <if test="addPrice !=null">
+                AND add_price=#{addPrice}
+            </if>
+            <if test="quantity !=null">
+                AND quantity=#{quantity}
+            </if>
+            <if test="delivery !=null">
+                AND delivery=#{delivery}
+            </if>
+            <if test="linkman !=null">
+                AND linkman=#{linkman}
+            </if>
+            <if test="phone !=null">
+                AND phone=#{phone}
+            </if>
+            <if test="memo !=null">
+                AND memo=#{memo}
+            </if>
+
+            <if test="keyword !=null">
+                AND (phone like concat('%',#{keyword},'%') ||
+                customer_id in (select id from wx_customer where name like concat('%',#{keyword},'%')) ||
+                supplier_id in (select id from wx_customer where name like concat('%',#{keyword},'%')) ||
+                product_id in (select id from wx_product where name like concat('%',#{keyword},'%'))
+                )
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="OrderMap">
+        select
+        <include refid="column_list"/>
+        from wx_order
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from wx_order
+        <include refid="where_filters"/>
+    </select>
+
+
+</mapper>

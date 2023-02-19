@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rzico.core.mapper.SysMchMapper">
+  <resultMap id="SysMchMap" type="com.rzico.core.entity.SysMch">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="admin_id" jdbcType="VARCHAR" property="adminId" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="linkman" jdbcType="VARCHAR" property="linkman" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="del_flag" jdbcType="BIT" property="delFlag" />
+    <collection property="menuList" column="{id=id}" ofType="com.rzico.core.entity.SysMch" select="com.rzico.core.mapper.SysMenuMapper.getMenuByMchId" />
+  </resultMap>
+  <!--列信息-->
+  <sql id="column_list">
+    id,name,short_name,logo,status,area_id,admin_id,area_name,address,linkman,phone,remark,create_by,create_date,modify_by,modify_date,del_flag
+  </sql>
+  <!--动态条件-->
+  <sql id="where_filters">
+    <where>
+      <if test="id !=null and id !=''">
+        AND id=#{id}
+      </if>
+
+      <if test="delFlag !=null">
+        AND del_flag=#{delFlag}
+      </if>
+      <if test="adminId !=null and adminId !=''">
+        AND admin_id=#{adminId}
+      </if>
+      <if test="name !=null and name !=''">
+        AND (name like concat('%',#{name},'%') or short_name like concat('%',#{name},'%'))
+      </if>
+      <if test="shortName !=null and shortName !=''">
+        AND (name like concat('%',#{shortName},'%') or short_name like concat('%',#{shortName},'%'))
+      </if>
+      <if test="status !=null ">
+        AND status=#{status}
+      </if>
+
+      <if test="areaId !=null and areaId !=''">
+        AND area_id=#{areaId}
+      </if>
+      <if test="areaName !=null and areaName !=''">
+        AND area_name=#{areaName}
+      </if>
+      <if test="address !=null and address !=''">
+        AND (address like concat('%',#{address},'%') or area_name like concat('%',#{address},'%'))
+      </if>
+      <if test="remark !=null and remark !=''">
+        AND remark=#{remark}
+      </if>
+      <if test="linkman !=null and linkman !=''">
+        AND linkman=#{linkman}
+      </if>
+      <if test="phone !=null and phone !=''">
+        AND phone=#{phone}
+      </if>
+      <if test="createBy !=null and createBy !=''">
+        AND create_by=#{createBy}
+      </if>
+      <if test="startDate !=null and endDate != null">
+        AND (create_date >= #{startDate} and create_date &lt;= #{endDate})
+      </if>
+      <if test="modifyBy !=null and modifyBy !=''">
+        AND modify_by=#{modifyBy}
+      </if>
+
+      <if test="modifyDate !=null ">
+        AND modify_date=#{modifyDate}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectList" parameterType="map" resultMap="SysMchMap">
+    select
+    <include refid="column_list"/>
+    from sys_mch
+    <include refid="where_filters"/>
+    <if test="sortField != null and sortField != ''">
+      ORDER BY
+        ${sortField}
+      <if test="sortType != null and sortType != ''">
+        ${sortType}
+      </if>
+    </if>
+  </select>
+
+  <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+    select
+    count(*)
+    from sys_mch
+    <include refid="where_filters"/>
+  </select>
+
+</mapper>

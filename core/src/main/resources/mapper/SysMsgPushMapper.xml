@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysMsgPushMapper">
+<resultMap id="SysMsgPushMap" type="com.rzico.core.entity.SysMsgPush">
+    <!--编号-->
+    <result column="id" property="id"/>
+    <!--消息编码-->
+    <result column="msg_id" property="msgId"/>
+    <!--关联业务类型-->
+    <result column="msg_key" property="msgKey"/>
+    <!--内容级别（1普通 2一般 3紧急）-->
+    <result column="msg_level" property="msgLevel"/>
+    <!--内容类型（1公告 2新闻 3会议 4通知）-->
+    <result column="msg_type" property="msgType"/>
+    <!--消息标题-->
+    <result column="msg_title" property="msgTitle"/>
+    <!--消息内容（通知时是json串）-->
+    <result column="msg_content" property="msgContent"/>
+    <!--是否有附件-->
+    <result column="is_attac" property="isAttac"/>
+    <!--接受者用户编码-->
+    <result column="receive_user_id" property="receiveUserId"/>
+    <!--接受者用户姓名-->
+    <result column="receive_user_name" property="receiveUserName"/>
+    <!--发送者用户编码-->
+    <result column="send_user_id" property="sendUserId"/>
+    <!--发送者用户姓名-->
+    <result column="send_user_name" property="sendUserName"/>
+    <!--发送时间-->
+    <result column="send_date" property="sendDate"/>
+    <!--是否推送-->
+    <result column="is_push" property="isPush"/>
+    <!--推送时间-->
+    <result column="push_date" property="pushDate"/>
+    <!--推送状态（0未推送 1成功  2失败）-->
+    <result column="push_status" property="pushStatus"/>
+    <!--读取状态（0未送达 1已读 2未读）-->
+    <result column="read_status" property="readStatus"/>
+    <!--读取时间-->
+    <result column="read_date" property="readDate"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,msg_id,msg_key,msg_level,msg_type,msg_title,msg_content,is_attac,receive_user_id,receive_user_name,send_user_id,send_user_name,send_date,is_push,push_date,push_status,read_status,read_date,mch_id
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="msgId !=null">
+                AND msg_id=#{msgId}
+            </if>
+            <if test="msgKey !=null">
+                AND msg_key=#{msgKey}
+            </if>
+            <if test="msgLevel !=null">
+                AND msg_level=#{msgLevel}
+            </if>
+            <if test="msgType !=null">
+                AND msg_type=#{msgType}
+            </if>
+            <if test="msgTitle !=null">
+                AND msg_title=#{msgTitle}
+            </if>
+            <if test="msgContent !=null">
+                AND msg_content=#{msgContent}
+            </if>
+            <if test="isAttac !=null">
+                AND is_attac=#{isAttac}
+            </if>
+            <if test="receiveUserId !=null">
+                AND receive_user_id=#{receiveUserId}
+            </if>
+            <if test="receiveUserName !=null">
+                AND receive_user_name=#{receiveUserName}
+            </if>
+            <if test="sendUserId !=null">
+                AND send_user_id=#{sendUserId}
+            </if>
+            <if test="sendUserName !=null">
+                AND send_user_name=#{sendUserName}
+            </if>
+            <if test="sendDate !=null">
+                AND send_date=#{sendDate}
+            </if>
+            <if test="isPush !=null">
+                AND is_push=#{isPush}
+            </if>
+            <if test="pushDate !=null">
+                AND push_date=#{pushDate}
+            </if>
+            <if test="pushStatus !=null">
+                AND push_status=#{pushStatus}
+            </if>
+            <if test="readStatus !=null">
+                AND read_status=#{readStatus}
+            </if>
+            <if test="readDate !=null">
+                AND read_date=#{readDate}
+            </if>
+            <if test="mchId !=null">
+                AND mch_id=#{mchId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysMsgPushMap">
+        select
+        <include refid="column_list"/>
+        from sys_msg_push
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from sys_msg_push
+        <include refid="where_filters"/>
+    </select>
+
+    <select id="conversation" parameterType="map" resultMap="SysMsgPushMap">
+        select
+        a.*
+        from sys_msg_push a,(select max(id) as id from sys_msg_push where receive_user_id=#{receiveUserId} group by msg_key) b
+        where a.id=b.id
+    </select>
+
+    <select id="unReadCount" parameterType="map" resultType="java.util.HashMap">
+        select
+        msg_key,count(*) as msg_num
+        from sys_msg_push
+        <include refid="where_filters"/>
+        group by msg_key
+    </select>
+
+    <update id="markAsRead" parameterType="map">
+        update sys_msg_push set read_status='1',read_date=NOW()
+        <include refid="where_filters"/>
+    </update>
+
+
+
+</mapper>

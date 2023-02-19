@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rzico.core.mapper.SysOfficeMapper">
+  <resultMap id="SysOfficeMap" type="com.rzico.core.entity.SysOffice">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="tree_path" jdbcType="VARCHAR" property="treePath" />
+    <result column="data_sort" jdbcType="INTEGER" property="dataSort" />
+    <result column="leader" jdbcType="VARCHAR" property="leader" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="zip_code" jdbcType="VARCHAR" property="zipCode" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="del_flag" jdbcType="BIT" property="delFlag" />
+    <association property="parent" column="{parentId=parent_id}" select="getParent"/>
+  </resultMap>
+
+  <!--列信息-->
+  <sql id="column_list">
+    id,name,type,parent_id,tree_path,data_sort,leader,phone,address,zip_code,email,status,remark,mch_id,create_by,create_date,modify_by,modify_date,del_flag
+  </sql>
+
+  <!--动态条件-->
+  <sql id="where_filters">
+    <where>
+      <if test="id !=null and id !=''">
+        AND id=#{id}
+      </if>
+      <if test="name !=null and name !=''">
+        AND name like concat('%',#{name},'%')
+      </if>
+      <if test="type !=null and type !=''">
+        AND type=#{type}
+      </if>
+      <if test="status !=null ">
+        AND status=#{status}
+      </if>
+      <if test="parentId !=null and parentId !=''">
+        AND parent_id=#{parentId}
+      </if>
+      <if test="mchId !=null and mchId !=''">
+        AND mch_id=#{mchId}
+      </if>
+      <if test="createBy !=null and createBy !=''">
+        AND create_by=#{createBy}
+      </if>
+      <if test="createDate !=null">
+        AND create_date=#{createDate}
+      </if>
+      <if test="updateBy !=null and updateBy !=''">
+        AND update_by=#{updateBy}
+      </if>
+      <if test="modifyDate !=null ">
+        AND modify_date=#{modifyDate}
+      </if>
+      <if test="delFlag !=null">
+        AND del_flag=#{delFlag}
+      </if>
+      <if test="officeId !=null and officeId !=''">
+        and tree_path like CONCAT ('%,', #{officeId,jdbcType=VARCHAR},',%')
+      </if>
+      <if test="dataScopeId !=null and dataScopeId !=''">
+        AND id in (
+          select id from sys_office a,
+            (select tree_path from sys_office where id in (
+                select office_id from sys_user_data_scope where user_id =#{dataScopeId,jdbcType=VARCHAR} and scope_type=1)) b
+            where b.tree_path LIKE  concat('%,',a.id,',%')
+        )
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectAllChildren" resultMap="SysOfficeMap">
+    select
+        <include refid="column_list"/>
+      from sys_office
+    where mch_id=#{mchId,jdbcType=VARCHAR}
+    and tree_path like CONCAT ('%,', #{id,jdbcType=VARCHAR},',%')
+  </select>
+
+  <select id="getChildrens" resultMap="SysOfficeMap">
+    select
+    <include refid="column_list"/>
+    from sys_office
+    where parent_id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getParent" resultMap="SysOfficeMap">
+    select
+    <include refid="column_list"/>
+    from sys_office
+    where id = #{parentId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectList" parameterType="map" resultMap="SysOfficeMap">
+    select
+    <include refid="column_list"/>
+    from sys_office
+    <include refid="where_filters"/>
+    <if test="sortField != null and sortField != ''">
+      ORDER BY
+      ${sortField}
+      <if test="sortType != null and sortType != ''">
+        ${sortType}
+      </if>
+    </if>
+  </select>
+
+  <select id="getOfficeByUserId" parameterType="string" resultMap="SysOfficeMap">
+    select
+    <include refid="column_list"/>
+    from  sys_office
+    where id in (
+    select office_id from sys_user_data_scope where
+    user_id =#{id,jdbcType=VARCHAR}
+    )
+  </select>
+
+
+  <select id="getOfficeByEmployeeId" parameterType="map" resultMap="SysOfficeMap">
+    select
+    <include refid="column_list"/>
+    from sys_office
+    where id = #{officeId,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

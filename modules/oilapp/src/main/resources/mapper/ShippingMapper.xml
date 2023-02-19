@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.oilapp.mapper.ShippingMapper">
+<resultMap id="ShippingMap" type="com.rzico.oilapp.entity.Shipping">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--所属公司-->
+    <result column="company_id" property="companyId"/>
+    <!--供应商-->
+    <result column="supplier_id" property="supplierId"/>
+    <!--采购商-->
+    <result column="customer_id" property="customerId"/>
+    <!--油库-->
+    <result column="warehouse_id" property="warehouseId"/>
+    <!--商品-->
+    <result column="product_id" property="productId"/>
+    <!--车辆id-->
+    <result column="car_id" property="carId"/>
+    <!--提货数量-->
+    <result column="quantity" property="quantity"/>
+    <!--提供方式(1.公路,2.船提,3.火车)-->
+    <result column="delivery" property="delivery"/>
+    <!--提货状态(1.已预约,2.已提货)-->
+    <result column="status" property="status"/>
+    <!--备注-->
+    <result column="memo" property="memo"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,company_id,supplier_id,customer_id,warehouse_id,product_id,car_id,quantity,delivery,status,memo
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="companyId !=null">
+                AND company_id=#{companyId}
+            </if>
+            <if test="supplierId !=null">
+                AND supplier_id=#{supplierId}
+            </if>
+            <if test="customerId !=null">
+                AND customer_id=#{customerId}
+            </if>
+            <if test="warehouseId !=null">
+                AND warehouse_id=#{warehouseId}
+            </if>
+            <if test="productId !=null">
+                AND product_id=#{productId}
+            </if>
+            <if test="carId !=null">
+                AND car_id=#{carId}
+            </if>
+            <if test="quantity !=null">
+                AND quantity=#{quantity}
+            </if>
+            <if test="delivery !=null">
+                AND delivery=#{delivery}
+            </if>
+            <if test="status !=null">
+                AND status=#{status}
+            </if>
+            <if test="memo !=null">
+                AND memo=#{memo}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="ShippingMap">
+        select
+        <include refid="column_list"/>
+        from wx_shipping
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from wx_shipping
+        <include refid="where_filters"/>
+    </select>
+
+
+</mapper>

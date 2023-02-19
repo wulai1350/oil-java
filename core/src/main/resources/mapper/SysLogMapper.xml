@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysLogMapper">
+<resultMap id="SysLogMap" type="com.rzico.core.entity.SysLog">
+    <!---->
+    <result column="id" property="id"/>
+    <!--用户账号-->
+    <result column="username" property="username"/>
+    <!--日志类型-->
+    <result column="log_type" property="logType"/>
+    <!--日志标题-->
+    <result column="log_title" property="logTitle"/>
+    <!--请求URI-->
+    <result column="request_uri" property="requestUri"/>
+    <!--操作方式-->
+    <result column="request_method" property="requestMethod"/>
+    <!--操作提交的数据-->
+    <result column="request_params" property="requestParams"/>
+    <!--新旧数据比较结果-->
+    <result column="diff_modify_data" property="diffModifyData"/>
+    <!--操作IP地址-->
+    <result column="remote_addr" property="remoteAddr"/>
+    <!--请求服务器地址-->
+    <result column="server_addr" property="serverAddr"/>
+    <!--是否异常-->
+    <result column="is_exception" property="isException"/>
+    <!--异常信息-->
+    <result column="exception_info" property="exceptionInfo"/>
+    <!--用户代理-->
+    <result column="user_agent" property="userAgent"/>
+    <!--设备名称/操作系统-->
+    <result column="device_name" property="deviceName"/>
+    <!--浏览器名称-->
+    <result column="browser_name" property="browserName"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,username,log_type,log_title,request_uri,request_method,request_params,diff_modify_data,remote_addr,server_addr,is_exception,exception_info,user_agent,device_name,browser_name,mch_id,create_by,create_date,modify_by,modify_date
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="username !=null and username !=''">
+                AND username=#{username}
+            </if>
+            <if test="logType !=null and logType !=''">
+                AND log_type=#{logType}
+            </if>
+            <if test="logTitle !=null and logTitle !=''">
+                AND log_title=#{logTitle}
+            </if>
+            <if test="requestUri !=null and requestUri !=''">
+                AND request_uri=#{requestUri}
+            </if>
+            <if test="requestMethod !=null and requestMethod !=''">
+                AND request_method=#{requestMethod}
+            </if>
+            <if test="requestParams !=null and requestParams !=''">
+                AND request_params=#{requestParams}
+            </if>
+            <if test="diffModifyData !=null and diffModifyData !=''">
+                AND diff_modify_data=#{diffModifyData}
+            </if>
+            <if test="remoteAddr !=null and remoteAddr !=''">
+                AND remote_addr=#{remoteAddr}
+            </if>
+            <if test="serverAddr !=null and serverAddr !=''">
+                AND server_addr=#{serverAddr}
+            </if>
+            <if test="isException !=null and isException !=''">
+                AND is_exception=#{isException}
+            </if>
+            <if test="exceptionInfo !=null and exceptionInfo !=''">
+                AND exception_info=#{exceptionInfo}
+            </if>
+            <if test="userAgent !=null and userAgent !=''">
+                AND user_agent=#{userAgent}
+            </if>
+            <if test="deviceName !=null and deviceName !=''">
+                AND device_name=#{deviceName}
+            </if>
+            <if test="browserName !=null and browserName !=''">
+                AND browser_name=#{browserName}
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createDate !=null and createDate !=''">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyBy !=null and modifyBy !=''">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null and modifyDate !=''">
+                AND modify_date=#{modifyDate}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysLogMap">
+        select
+        <include refid="column_list"/>
+        from sys_log
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+</mapper>

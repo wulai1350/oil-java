@@ -1,0 +1,9 @@
+message:
+  exchangeMapList:
+    - name: directExchange
+    - name: topicExchange
+    - name: fanoutExchange
+  queueMapList:
+#    - exchange: directExchange
+#      queue: queue.order.payment
+#      routingkey: queue.order.payment.key

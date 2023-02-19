@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysPluginAttributeMapper">
+<resultMap id="SysPluginAttributeMap" type="com.rzico.core.entity.SysPluginAttribute">
+    <!--编号-->
+    <result column="id" property="id"/>
+    <!--插件编号-->
+    <result column="plugin_id" property="pluginId"/>
+    <!--插件编号-->
+    <result column="type" property="type"/>
+    <!--属性名称-->
+    <result column="name" property="name"/>
+    <!--属性值-->
+    <result column="attribute" property="attribute"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,plugin_id,type,name,attribute
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="pluginId !=null and pluginId !=''">
+                AND plugin_id=#{pluginId}
+            </if>
+            <if test="name !=null and name !=''">
+                AND name=#{name}
+            </if>
+            <if test="attribute !=null and attribute !=''">
+                AND attribute=#{attribute}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysPluginAttributeMap">
+        select
+        <include refid="column_list"/>
+        from sys_plugin_attribute
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="getSysPluginAttribute" parameterType="com.rzico.core.entity.SysPluginAttribute" resultMap="SysPluginAttributeMap">
+        select * from sys_plugin_attribute where plugin_id = #{id}
+    </select>
+
+</mapper>

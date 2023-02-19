@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysMchMenuMapper">
+<resultMap id="SysMchMenuMap" type="com.rzico.core.entity.SysMchMenu">
+    <!---->
+    <id column="id" property="id"/>
+    <!---->
+    <result column="mch_id" property="mchId"/>
+    <!---->
+    <result column="menu_id" property="menuId"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,mch_id,menu_id
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="menuId !=null and menuId !=''">
+                AND menu_id=#{menuId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysMchMenuMap">
+        select
+        <include refid="column_list"/>
+        from sys_mch_menu
+        <include refid="where_filters"/>
+    </select>
+
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+        count(*)
+        from sys_mch_menu
+        <include refid="where_filters"/>
+    </select>
+
+</mapper>

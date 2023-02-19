@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.oilapp.mapper.ProductMapper">
+<resultMap id="ProductMap" type="com.rzico.oilapp.entity.Product">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--产品编码-->
+    <result column="sn" property="sn"/>
+    <!--产品名称-->
+    <result column="name" property="name"/>
+    <!--预售价格-->
+    <result column="price" property="price"/>
+    <!--所属公司-->
+    <result column="company_id" property="companyId"/>
+    <!--供应商ID-->
+    <result column="customer_id" property="customerId"/>
+    <!--最小起订量-->
+    <result column="minimum" property="minimum"/>
+    <!--锁油期限(天)-->
+    <result column="limit_day" property="limitDay"/>
+
+    <result column="goods_id" property="goodsId"/>
+
+    <result column="order_method" property="orderMethod"/>
+
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,sn,name,price,company_id,customer_id,minimum,limit_day,goods_id,order_method
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="sn !=null">
+                AND sn=#{sn}
+            </if>
+            <if test="name !=null">
+                AND name=#{name}
+            </if>
+            <if test="keyword !=null">
+                AND name like concat('%',#{keyword},'%')
+            </if>
+            <if test="price !=null">
+                AND price=#{price}
+            </if>
+            <if test="companyId !=null">
+                AND company_id=#{companyId}
+            </if>
+            <if test="customerId !=null">
+                AND customer_id=#{customerId}
+            </if>
+            <if test="goodsCategoryId !=null">
+                AND goods_id in (select id from wx_goods where goods_categroy_id=#{goodsCategoryId})
+            </if>
+            <if test="minimum !=null">
+                AND minimum=#{minimum}
+            </if>
+            <if test="limitDay !=null">
+                AND limit_day=#{limitDay}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="ProductMap">
+        select
+        <include refid="column_list"/>
+        from wx_product
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from wx_product
+        <include refid="where_filters"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="ProductMap">
+        select
+        <include refid="column_list"/>
+        from wx_product
+        where id =#{id,jdbcType=VARCHAR}
+    </select>
+</mapper>

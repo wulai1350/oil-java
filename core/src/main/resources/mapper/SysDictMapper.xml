@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysDictMapper">
+<resultMap id="SysDictMap" type="com.rzico.core.entity.SysDict">
+    <!--字典id-->
+    <result column="id" property="id"/>
+    <!--字典名称-->
+    <result column="name" property="name"/>
+    <!--dict_type表主键-->
+    <result column="dict_type" property="dictType"/>
+    <!--描述-->
+    <result column="description" property="description"/>
+    <!--状态(1启用 0停用)-->
+    <result column="status" property="status"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--删除标志-->
+    <result column="del_flag" property="delFlag"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,name,dict_type,description,status,create_by,create_date,modify_by,modify_date,del_flag
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="name !=null">
+                AND name like concat('%',#{name},'%')
+            </if>
+            <if test="dictType !=null">
+                AND dict_type=#{dictType}
+            </if>
+            <if test="description !=null">
+                AND description=#{description}
+            </if>
+            <if test="status !=null">
+                AND status=#{status}
+            </if>
+            <if test="createBy !=null">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyBy !=null">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="delFlag !=null">
+                AND del_flag=#{delFlag}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysDictMap">
+        select
+        <include refid="column_list"/>
+        from sys_dict
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+</mapper>

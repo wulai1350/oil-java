@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysUserDataScopeMapper">
+<resultMap id="SysUserDataScopeMap" type="com.rzico.core.entity.SysUserDataScope">
+    <!--控制用户编码-->
+    <result column="id" property="id"/>
+    <!--控制用户编码-->
+    <result column="user_id" property="userId"/>
+    <!--权限类型（1组织架构 2门店仓库..可扩展)-->
+    <result column="scope_type" property="scopeType"/>
+    <!--控制组织架构-->
+    <result column="office_id" property="officeId"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,user_id,scope_type,office_id
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="userId !=null and userId !=''">
+                AND user_id=#{userId}
+            </if>
+            <if test="scopeType !=null and scopeType !=''">
+                AND scope_type=#{scopeType}
+            </if>
+            <if test="officeId !=null and officeId !=''">
+                AND office_id=#{officeId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysUserDataScopeMap">
+        select
+        <include refid="column_list"/>
+        from sys_user_data_scope
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+        count(*)
+        from sys_user_data_scope
+        <include refid="where_filters"/>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,84 @@
+server:
+  port: 9090
+  ssl.key-store: classpath:cert/oil.rzico.com.pfx
+  ssl.key-store-password: q3u3ux7o
+  ssl.key-store-type: PKCS12
+  ssl.key-alias: alias
+
+spring:
+  devtools:
+      restart:
+        enabled: true
+  datasource:
+        url: jdbc:mysql://47.101.149.229:3306/db_oil_data?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: zhangsr@051204
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        filters: stat
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
+
+  redis:
+    database: 0
+    host: 175.24.188.209
+    port: 6379
+    password: redis@051204
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 8
+      max-wait: 1
+    timeout: 5000
+
+  rabbitmq:
+    host: 47.101.149.229 #47.97.178.86
+    port: 5672
+    username: admin
+    password: rzicomq
+    publisher-confirms: true  #显示回调
+#    支持发布返回
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+      direct:
+        acknowledge-mode: manual
+
+mybatis:
+    type-aliases-package: com.rzico.core.entity
+    mapper-locations: classpath*:mapper/*.xml
+    check-config-location: true
+    configuration:
+      lazy-loading-enabled: true   #开启赖加载
+      aggressive-lazy-loading: false   #false 为按需加载
+
+rzico:
+  isDayType: false
+
+  imagePath: ./image/
+  filePath:
+    windows: C://jasper/src
+    linux: /home/jasper/src
+
+logging:
+  config: classpath:logback-dev.xml
+
+
+dataType: mysql
+
+weixin:
+  #公众号
+  appid: wxc25c2dd586daf2fa
+  #公众号密钥
+  appSecret: f5e7d000d00788053c50ca6b3a442d20

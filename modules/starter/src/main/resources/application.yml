@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: rzico-boot
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+  profiles:
+    active: dev
+    include:
+      - queue
+  main:
+    allow-bean-definition-overriding: true
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  jmx:
+      default-domain: rzico-web
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  tokenSecret: rzico-boot #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24)604800
+  tokenPrefix: Bearer  #JWT负载中拿到开头
+  verifyCode: false  #是否开启验证码
+
+amap:
+  key: 4ed64652325defe038a7751c0beec9ee
+
+kuaidi100:
+#  key: chWCAFkh6063
+#  customer: 1888795B28F730166840AB955B32D801
+  key: LUGrGxVv5424
+  customer: CA0458184A285466819D7F570477F546
+
+#京东支付
+jdyun:
+  agentNum: 10001016214988734441917
+  secretKey: 1706546bf2624dfea8bb9d2a1ce69607569130e7
+  accessKey: 542abcf6422949a7b6b7de2caaf18ecbd66901d2
+
+#饿了私
+eleme:
+  appKey: 3NrfFPjQVu
+  appSecret: b2ceea26a44ca5c4594e134fe9d9831ac4c7c380
+  isSandbox: true
+  callbackUrl: https://boot.rzico.com:9090/swagger-ui.html
+
+ahyun:
+  #机构支付宝编号
+  aliOrgNo: G01802
+  #机构支付宝账户
+  aliOrgUsrNo: B01904
+  #回调地址
+  notifyUrl: B01904
+
+#提现规则
+transfer:
+  #0.含手续费 1.手续费外家
+  feeType: 0

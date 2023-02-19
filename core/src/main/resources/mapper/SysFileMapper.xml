@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysFileMapper">
+<resultMap id="SysFileMap" type="com.rzico.core.entity.SysFile">
+    <!--编号-->
+    <result column="id" property="id"/>
+    <!--文件名称-->
+    <result column="file_name" property="fileName"/>
+    <!--文件分类（0image、1media、2music、3file）-->
+    <result column="file_type" property="fileType"/>
+    <!--文件路径-->
+    <result column="file_url" property="fileUrl"/>
+    <!--文件路径-->
+    <result jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" column="content" property="content"/>
+    <!--插件编码-->
+    <result column="plugin_id" property="pluginId"/>
+    <!--插件名称-->
+    <result column="plugin_name" property="pluginName"/>
+    <!--插件编码-->
+    <result column="order_id" property="orderId"/>
+    <!--插件名称-->
+    <result column="order_type" property="orderType"/>
+    <!--状态（0正常 1删除 2停用）-->
+    <result column="status" property="status"/>
+    <!--备注信息-->
+    <result column="remark" property="remark"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--删除标志-->
+    <result column="del_flag" property="delFlag"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,file_name,file_type,file_url,plugin_id,plugin_name,status,order_id,order_type,remark,content,mch_id,create_by,create_date,modify_by,modify_date,del_flag
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="fileName !=null and fileName !=''">
+                AND file_name=#{fileName}
+            </if>
+            <if test="fileType !=null and fileType !=''">
+                AND file_type=#{fileType}
+            </if>
+            <if test="fileUrl !=null and fileUrl !=''">
+                AND file_url=#{fileUrl}
+            </if>
+            <if test="pluginId !=null and pluginId !=''">
+                AND plugin_id=#{pluginId}
+            </if>
+            <if test="pluginName !=null and pluginName !=''">
+                AND plugin_name=#{pluginName}
+            </if>
+            <if test="orderType !=null and orderType !=''">
+                AND order_type=#{orderType}
+            </if>
+            <if test="orderId !=null and orderId !=''">
+                AND order_id=#{orderId}
+            </if>
+            <if test="status !=null and status !=''">
+                AND status=#{status}
+            </if>
+            <if test="remark !=null and remark !=''">
+                AND remark=#{remark}
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createDate !=null and createDate !=''">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyBy !=null and modifyBy !=''">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null and modifyDate !=''">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="delFlag !=null and delFlag !=''">
+                AND del_flag=#{delFlag}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysFileMap">
+        select
+        <include refid="column_list"/>
+        from sys_file
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+</mapper>

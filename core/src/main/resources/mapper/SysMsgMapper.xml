@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysMsgMapper">
+<resultMap id="SysMsgMap" type="com.rzico.core.entity.SysMsg">
+    <!--编号-->
+    <result column="id" property="id"/>
+    <!--消息标题-->
+    <result column="msg_title" property="msgTitle"/>
+    <!--内容级别（1普通 2一般 3紧急）-->
+    <result column="msg_level" property="msgLevel"/>
+    <!--内容类型（1公告 2新闻 3会议 4通知）-->
+    <result column="msg_type" property="msgType"/>
+    <!--消息内容-->
+    <result column="msg_content" property="msgContent"/>
+    <!--接受者类型（0全部 1用户 2部门 3角色 4岗位）-->
+    <result column="receive_type" property="receiveType"/>
+    <!--发送者用户编码-->
+    <result column="send_user_id" property="sendUserId"/>
+    <!--发送者用户姓名-->
+    <result column="send_user_name" property="sendUserName"/>
+    <!--发送时间-->
+    <result column="send_date" property="sendDate"/>
+    <!--是否有附件-->
+    <result column="is_attac" property="isAttac"/>
+
+    <!--状态（0草稿 1审核 2驳回）-->
+    <result column="status" property="status"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--删除标志-->
+    <result column="del_flag" property="delFlag"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,msg_title,msg_level,msg_type,msg_content,receive_type,send_user_id,send_user_name,send_date,is_attac,status,mch_id,create_by,create_date,modify_by,modify_date,del_flag
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="msgTitle !=null and msgTitle !=''">
+                AND msg_title=#{msgTitle}
+            </if>
+            <if test="msgLevel !=null and msgLevel !=''">
+                AND msg_level=#{msgLevel}
+            </if>
+            <if test="msgType !=null and msgType !=''">
+                AND msg_type=#{msgType}
+            </if>
+            <if test="msgContent !=null and msgContent !=''">
+                AND msg_content=#{msgContent}
+            </if>
+            <if test="receiveType !=null and receiveType !=''">
+                AND receive_type=#{receiveType}
+            </if>
+            <if test="sendUserId !=null and sendUserId !=''">
+                AND send_user_id=#{sendUserId}
+            </if>
+            <if test="sendUserName !=null and sendUserName !=''">
+                AND send_user_name=#{sendUserName}
+            </if>
+            <if test="sendDate !=null and sendDate !=''">
+                AND send_date=#{sendDate}
+            </if>
+            <if test="isAttac !=null and isAttac !=''">
+                AND is_attac=#{isAttac}
+            </if>
+            <if test="notifyType !=null and notifyType !=''">
+                AND notify_type=#{notifyType}
+            </if>
+            <if test="status !=null">
+                AND status=#{status}
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="startDate !=null and startDate !='' and endDate != null and endDate !=''">
+                AND (create_date >= #{startDate} and create_date &lt;= #{endDate})
+            </if>
+            <if test="modifyBy !=null and modifyBy !=''">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null and modifyDate !=''">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="delFlag !=null">
+                AND del_flag=#{delFlag}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysMsgMap">
+        select
+        <include refid="column_list"/>
+        from sys_msg
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.oilapp.mapper.CustomerMapper">
+<resultMap id="CustomerMap" type="com.rzico.oilapp.entity.Customer">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--公司名称-->
+    <result column="name" property="name"/>
+    <!--客户类型(1.供应商,2.采购方)-->
+    <result column="type" property="type"/>
+    <!--公司类型(1.贸易公司,2.零售终端,3.用油企业)-->
+    <result column="nature" property="nature"/>
+    <!--公司Logo-->
+    <result column="logo" property="logo"/>
+    <!--联系电话-->
+    <result column="phone" property="phone"/>
+    <!--联系人-->
+    <result column="linkman" property="linkman"/>
+    <!--状态(0.未认证,1.已认证)-->
+    <result column="status" property="status"/>
+    <!--审核说明-->
+    <result column="msg" property="msg"/>
+    <!--详情地址-->
+    <result column="address" property="address"/>
+    <!--所属集团-->
+    <result column="group_id" property="groupId"/>
+    <!--所属账户-->
+    <result column="company_id" property="companyId"/>
+    <!--审核资料-->
+    <result column="meta" property="meta"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,name,type,nature,logo,phone,linkman,status,msg,address,group_id,company_id,meta
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="name !=null">
+                AND name=#{name}
+            </if>
+            <if test="noid !=null">
+                AND id!=#{noid}
+            </if>
+            <if test="keyword !=null">
+                AND name like concat('%',#{keyword},'%')
+            </if>
+            <if test="type !=null">
+                AND type=#{type}
+            </if>
+            <if test="nature !=null">
+                AND nature=#{nature}
+            </if>
+            <if test="logo !=null">
+                AND logo=#{logo}
+            </if>
+            <if test="phone !=null">
+                AND phone=#{phone}
+            </if>
+            <if test="linkman !=null">
+                AND linkman=#{linkman}
+            </if>
+            <if test="status !=null">
+                AND status=#{status}
+            </if>
+            <if test="msg !=null">
+                AND msg=#{msg}
+            </if>
+            <if test="address !=null">
+                AND address=#{address}
+            </if>
+            <if test="groupId !=null">
+                AND group_id=#{groupId}
+            </if>
+            <if test="companyId !=null">
+                AND company_id=#{companyId}
+            </if>
+            <if test="meta !=null">
+                AND meta=#{meta}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="CustomerMap">
+        select
+        <include refid="column_list"/>
+        from wx_customer
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from wx_customer
+        <include refid="where_filters"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="CustomerMap">
+        select
+        <include refid="column_list"/>
+        from wx_customer
+        where id =#{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

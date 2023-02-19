@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysEmployeeMapper">
+<resultMap id="SysEmployeeMap" type="com.rzico.core.entity.SysEmployee">
+    <!--员工编码-->
+    <result column="id" property="id"/>
+    <!--员工姓名-->
+    <result column="name" property="name"/>
+    <!--员工号-->
+    <result column="emp_no" property="empNo"/>
+    <!--部门编码-->
+    <result column="office_id" property="officeId"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+    <!--状态（1在职 0离职）-->
+    <result column="status" property="status"/>
+    <!--绑定用户-->
+    <result column="user_id" property="userId"/>
+    <result column="phone" property="phone"/>
+
+    <!--备注信息-->
+    <result column="remark" property="remark"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--删除标志-->
+    <result column="del_flag" property="delFlag"/>
+    <association property="sysOffice" column="{officeId=office_id}" select="com.rzico.core.mapper.SysOfficeMapper.getOfficeByEmployeeId">
+    </association >
+
+    <collection property="postList"  column="id" select="com.rzico.core.mapper.SysPostMapper.selectPostByEmployee">
+    </collection>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,name,emp_no,office_id,mch_id,phone,status,user_id,remark,create_by,create_date,modify_by,modify_date,del_flag
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="name !=null and name !=''">
+                AND name like concat('%',#{name},'%')
+            </if>
+            <if test="empNo !=null and empNo !=''">
+                AND emp_no=#{empNo}
+            </if>
+            <if test="officeId !=null and officeId !=''">
+                AND office_id in (select id from sys_office where tree_path like CONCAT ('%,', #{officeId,jdbcType=VARCHAR},',%'))
+            </if>
+            <if test="officeIds !=null">
+                AND office_id in (select id from sys_office where
+                <foreach collection="officeIds" open="(1>1 " separator="" close=")" item="officeId">
+                    or (tree_path like CONCAT ('%,',#{officeId,jdbcType=VARCHAR},',%'))
+                </foreach>
+                )
+            </if>
+            <if test="postIds !=null">
+                AND id in (select employee_id from sys_employee_post where post_id in
+                <foreach collection="postIds" open="(" separator="," close=")" item="postId">
+                    #{postId}
+                </foreach>
+                )
+                AND office_id in (select id from sys_office where tree_path like CONCAT ('%,', #{officeId,jdbcType=VARCHAR},',%'))
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="status !=null ">
+                AND status=#{status}
+            </if>
+
+            <if test="userId !=null">
+                AND user_id=#{userId}
+            </if>
+            <if test="remark !=null and remark !=''">
+                AND remark=#{remark}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyBy !=null and modifyBy !=''">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="delFlag !=null">
+                AND del_flag=#{delFlag}
+            </if>
+            <if test="dataScopeId !=null and dataScopeId !=''">
+                AND (office_id is null or office_id in (
+                select office_id from sys_user_data_scope where
+                user_id =#{dataScopeId,jdbcType=VARCHAR}
+                ))
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="selectList" resultMap="SysEmployeeMap" parameterType="map">
+        select
+        <include refid="column_list"/>
+          from sys_employee
+        <include refid="where_filters"/>
+    </select>
+
+
+    <select id="getEmployeeById" resultMap="SysEmployeeMap" parameterType="map">
+        select
+        <include refid="column_list"/>
+        from sys_employee
+        where id=#{id}
+    </select>
+
+
+    <select id="getEmpInfo" resultMap="SysEmployeeMap">
+        select
+        <include refid="column_list"/>
+        from sys_employee
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+</mapper>

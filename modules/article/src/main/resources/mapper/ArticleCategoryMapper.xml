@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.article.mapper.ArticleCategoryMapper">
+<resultMap id="ArticleCategoryMap" type="com.rzico.article.entity.ArticleCategory">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--排序-->
+    <result column="orders" property="orders"/>
+    <!--名称-->
+    <result column="name" property="name"/>
+    <!---->
+    <result column="tree_path" property="treePath"/>
+    <!---->
+    <result column="parent" property="parentId"/>
+    <!--缩略图-->
+    <result column="thumbnail" property="thumbnail"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,orders,name,tree_path,parent,thumbnail
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="orders !=null">
+                AND orders=#{orders}
+            </if>
+            <if test="grade !=null">
+                AND grade=#{grade}
+            </if>
+            <if test="name !=null">
+                AND name=#{name}
+            </if>
+            <if test="treePath !=null">
+                AND tree_path=#{treePath}
+            </if>
+            <if test="parentId !=null">
+                AND parent=#{parentId}
+            </if>
+            <if test="thumbnail !=null">
+                AND thumbnail=#{thumbnail}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="ArticleCategoryMap">
+        select
+        <include refid="column_list"/>
+        from wx_article_category
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+
+    <select id="getParent" resultMap="ArticleCategoryMap">
+        select
+        <include refid="column_list"/>
+        from wx_article_category
+        where id = #{parentId,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="selectAllChildren" resultMap="ArticleCategoryMap">
+        select
+        <include refid="column_list"/>
+        from wx_article_category
+        where tree_path like CONCAT ('%', #{id,jdbcType=VARCHAR},'%')
+    </select>
+
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysTemplateMapper">
+<resultMap id="SysTemplateMap" type="com.rzico.core.entity.SysTemplate">
+    <!--编号-->
+    <result column="id" property="id"/>
+    <!--模板键值-->
+    <result column="tpl_key" property="tplKey"/>
+    <!--模板ID-->
+    <result column="tpl_id" property="tplId"/>
+    <!--模板名称-->
+    <result column="tpl_name" property="tplName"/>
+    <!--状态（0短信 1邮箱 2通知）-->
+    <result column="tpl_type" property="tplType"/>
+    <!--模板内容-->
+    <result column="tpl_content" property="tplContent"/>
+    <!--备注信息-->
+    <result column="remark" property="remark"/>
+    <!--商户号-->
+    <result column="mch_id" property="mchId"/>
+    <!--创建者-->
+    <result column="create_by" property="createBy"/>
+    <!--创建时间-->
+    <result column="create_date" property="createDate"/>
+    <!--更新者-->
+    <result column="modify_by" property="modifyBy"/>
+    <!--更新时间-->
+    <result column="modify_date" property="modifyDate"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,tpl_key,tpl_id,tpl_name,tpl_type,tpl_content,remark,mch_id,create_by,create_date,modify_by,modify_date
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="tplKey !=null and tplKey !=''">
+                AND tpl_key like concat('%',#{tplKey},'%')
+            </if>
+            <if test="tplName !=null and tplName !=''">
+                AND tpl_name like concat('%',#{tplName},'%')
+            </if>
+            <if test="tplType !=null and tplType !=''">
+                AND tpl_type=#{tplType}
+            </if>
+            <if test="tplContent !=null and tplContent !=''">
+                AND tpl_content=#{tplContent}
+            </if>
+            <if test="remark !=null and remark !=''">
+                AND remark=#{remark}
+            </if>
+            <if test="mchId !=null and mchId !=''">
+                AND mch_id=#{mchId}
+            </if>
+            <if test="createBy !=null and createBy !=''">
+                AND create_by=#{createBy}
+            </if>
+            <if test="startDate !=null and startDate !='' and endDate != null and endDate !=''">
+                AND (create_date >= #{startDate} and create_date &lt;= #{endDate})
+            </if>
+            <if test="modifyBy !=null and modifyBy !=''">
+                AND modify_by=#{modifyBy}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysTemplateMap">
+        select
+        <include refid="column_list"/>
+        from sys_template
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY
+            ${sortField}
+            <if test="sortType != null and sortType != ''">
+                ${sortType}
+            </if>
+        </if>
+    </select>
+
+</mapper>

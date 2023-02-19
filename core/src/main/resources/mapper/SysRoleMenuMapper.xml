@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rzico.core.mapper.SysRoleMenuMapper">
+  <resultMap id="SysRoleMenuMap" type="com.rzico.core.entity.SysRoleMenu">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+  </resultMap>
+
+  <!--列信息-->
+  <sql id="column_list">
+    id,role_id,menu_id
+  </sql>
+
+  <select id="selectListByCondition" parameterType="com.rzico.core.entity.SysRoleMenu" resultMap="SysRoleMenuMap">
+    select
+      *
+    from sys_role_menu
+    <where>
+      <if test="menuId!=null and menuId!=''">and menu_id =#{menuId,jdbcType=VARCHAR}</if>
+      <if test="roleId!=null and roleId!=''">and role_id =#{roleId,jdbcType=VARCHAR}</if>
+    </where>
+  </select>
+
+  <select id="countByCondition" parameterType="com.rzico.core.entity.SysRoleMenu" resultType="java.lang.Integer">
+    select
+    count(*)
+    from sys_role_menu
+    <where>
+      <if test="menuId!=null and menuId!=''">and menu_id =#{menuId,jdbcType=VARCHAR}</if>
+      <if test="roleId!=null and roleId!=''">and role_id =#{roleId,jdbcType=VARCHAR}</if>
+    </where>
+  </select>
+
+
+  <!--动态条件-->
+  <sql id="where_filters">
+    <where>
+      <if test="id !=null and id !=''">
+        AND id=#{id}
+      </if>
+      <if test="roleId !=null and roleId !=''">
+        AND role_id=#{roleId}
+      </if>
+      <if test="menuId !=null and menuId !=''">
+        AND menu_id=#{menuId}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectList" parameterType="map" resultMap="SysRoleMenuMap">
+    select
+        <include refid="column_list"/>
+      from sys_role_menu
+      <include refid="where_filters"/>
+      <if test="sortField != null and sortField != ''">
+        ORDER BY
+        ${sortField}
+        <if test="sortType != null and sortType != ''">
+          ${sortType}
+        </if>
+      </if>
+  </select>
+</mapper>

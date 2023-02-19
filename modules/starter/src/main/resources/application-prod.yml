@@ -1,0 +1,88 @@
+server:
+  port: 8443
+  ssl.key-store: classpath:cert/oil.rzico.com.pfx
+  ssl.key-store-password: q3u3ux7o
+  ssl.key-store-type: PKCS12
+  ssl.key-alias: alias
+
+spring:
+  devtools:
+      restart:
+        enabled: true
+  datasource:
+        url: jdbc:mysql://localhost:3306/db_oil_data?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: zhangsr@051204
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        filters: stat
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: redis@051204
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 8
+      max-wait: 1
+    timeout: 5000
+
+  rabbitmq:
+    host: 192.168.0.93
+    port: 5672
+    username: admin
+    password: rzicomq
+    #生产者确认消息
+    publisher-confirms: true
+    #消息未被消费则原封不动返回
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual  #消费端手动确认
+      direct:
+        acknowledge-mode: manual
+
+mybatis:
+    type-aliases-package: com.rzico.core.entity
+    mapper-locations: classpath*:mapper/*.xml
+    check-config-location: true
+    configuration:
+      lazy-loading-enabled: true   #开启赖加载
+      aggressive-lazy-loading: false
+      lazy-load-trigger-methods:
+
+rzico:
+  isDayType: false
+
+  imagePath: ./image/
+  filePath:
+      windows: C://jasper/src
+      linux: /home/jasper/src
+
+logging:
+  file: ./logs/rzico-log.log
+  level:
+    com.rzico.core.mapper: debug
+
+dataType: mysql
+
+weixin:
+  #公众号
+  appid: wx88a1ec3b5c3bc9c3
+  #公众号密钥
+  appSecret: f5e7d000d00788053c50ca6b3a442d20
+

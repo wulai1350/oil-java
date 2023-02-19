@@ -1,0 +1,6 @@
+局里码
+http://fraud.rzico.com/0/社区id?id=文章id
+社区码
+http://fraud.rzico.com/1/社区id?id=文章id
+公司码
+http://fraud.rzico.com/2/公号id?id=文章id

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.oilapp.mapper.WarehouseStockMapper">
+<resultMap id="WarehouseStockMap" type="com.rzico.oilapp.entity.WarehouseStock">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--所属公司-->
+    <result column="company_id" property="companyId"/>
+    <!--供应商-->
+    <result column="supplier_id" property="supplierId"/>
+    <!--采购商-->
+    <result column="customer_id" property="customerId"/>
+    <!--油库-->
+    <result column="warehouse_id" property="warehouseId"/>
+    <!--商品-->
+    <result column="product_id" property="productId"/>
+    <!--实物库存-->
+    <result column="stock" property="stock"/>
+    <!--下单库存-->
+    <result column="allocate_stock" property="allocateStock"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,company_id,supplier_id,customer_id,warehouse_id,product_id,stock,allocate_stock
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="companyId !=null">
+                AND company_id=#{companyId}
+            </if>
+            <if test="supplierId !=null">
+                AND supplier_id=#{supplierId}
+            </if>
+            <if test="customerId !=null">
+                AND customer_id=#{customerId}
+            </if>
+            <if test="warehouseId !=null">
+                AND warehouse_id=#{warehouseId}
+            </if>
+            <if test="productId !=null">
+                AND product_id=#{productId}
+            </if>
+            <if test="stock !=null">
+                AND stock=#{stock}
+            </if>
+            <if test="allocateStock !=null">
+                AND allocate_stock=#{allocateStock}
+            </if>
+
+            <if test="keyword !=null">
+                AND (customer_id in (select id from wx_customer where name like concat('%',#{keyword},'%')) || warehouse_id in (select id from wx_warehourse where name like concat('%',#{keyword},'%')))
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="WarehouseStockMap">
+        select
+        <include refid="column_list"/>
+        from wx_warehouse_stock
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from wx_warehouse_stock
+        <include refid="where_filters"/>
+    </select>
+
+
+</mapper>

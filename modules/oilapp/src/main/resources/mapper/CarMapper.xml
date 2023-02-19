@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.oilapp.mapper.CarMapper">
+<resultMap id="CarMap" type="com.rzico.oilapp.entity.Car">
+    <!---->
+    <result column="id" property="id"/>
+    <!--创建日期-->
+    <result column="create_date" property="createDate"/>
+    <!--修改日期-->
+    <result column="modify_date" property="modifyDate"/>
+    <!--车牌号-->
+    <result column="plate" property="plate"/>
+    <!--身份证号-->
+    <result column="id_no" property="idNo"/>
+    <!--审核资料-->
+    <result column="meta" property="meta"/>
+    <!--司机姓名-->
+    <result column="name" property="name"/>
+    <!--联系电话-->
+    <result column="phone" property="phone"/>
+    <!--状态(0.待审核,1.已审核,2.已驳回)-->
+    <result column="status" property="status"/>
+    <!--审核说明-->
+    <result column="msg" property="msg"/>
+    <!--所属账户-->
+    <result column="company_id" property="companyId"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,create_date,modify_date,plate,id_no,meta,name,phone,status,msg,company_id
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+            <if test="createDate !=null">
+                AND create_date=#{createDate}
+            </if>
+            <if test="modifyDate !=null">
+                AND modify_date=#{modifyDate}
+            </if>
+            <if test="plate !=null">
+                AND plate=#{plate}
+            </if>
+            <if test="idNo !=null">
+                AND id_no=#{idNo}
+            </if>
+            <if test="meta !=null">
+                AND meta=#{meta}
+            </if>
+            <if test="name !=null">
+                AND name=#{name}
+            </if>
+            <if test="phone !=null">
+                AND phone=#{phone}
+            </if>
+            <if test="status !=null">
+                AND status=#{status}
+            </if>
+            <if test="msg !=null">
+                AND msg=#{msg}
+            </if>
+            <if test="companyId !=null">
+                AND company_id=#{companyId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="CarMap">
+        select
+        <include refid="column_list"/>
+        from wx_car
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectRowCount" parameterType="map" resultType="java.lang.Integer">
+        select
+          count(*)
+        from wx_car
+        <include refid="where_filters"/>
+    </select>
+
+
+</mapper>

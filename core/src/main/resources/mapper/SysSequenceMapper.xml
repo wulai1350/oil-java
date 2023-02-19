@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rzico.core.mapper.SysSequenceMapper">
+<resultMap id="SysSequenceMap" type="com.rzico.core.entity.SysSequence">
+    <!--编号-->
+    <result column="id" property="id"/>
+    <!--序号-->
+    <result column="last_value" property="lastValue"/>
+</resultMap>
+    <!--列信息-->
+    <sql id="column_list">
+        id,`last_value`
+    </sql>
+    <!--动态条件-->
+    <sql id="where_filters">
+        <where>
+            <if test="id !=null and id !=''">
+                AND id=#{id}
+            </if>
+            <if test="lastValue !=null and lastValue !=''">
+                AND `last_value`=#{lastValue}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectList" parameterType="map" resultMap="SysSequenceMap">
+        select
+        <include refid="column_list"/>
+        from sys_sequence
+        <include refid="where_filters"/>
+        <if test="sortField != null and sortField != ''">
+            ORDER BY ${sortField}
+            <if test="sortType != null and sortType != ''">
+            ${sortType}
+            </if>
+        </if>
+    </select>
+
+
+    <update id="addValue" parameterType="map">
+        update sys_sequence set `last_value`=`last_value` + #{value,jdbcType=BIGINT}
+        where id =#{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>
